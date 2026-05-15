@@ -1,4 +1,3 @@
-```python
 import streamlit as st
 from transformers import pipeline
 
@@ -97,4 +96,3 @@ st.write("---")
 
 st.caption("👩‍💻 Autor: Lidia Kongiel")
 st.caption("🎓 Numer indeksu: s27788")
-```
