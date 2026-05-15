@@ -53,15 +53,16 @@ if translate_button and text:
     with st.spinner("⏳ Trwa tłumaczenie..."):
 
         translator = pipeline(
-            "text2text-generation",
-            model="google/flan-t5-base"
+            "text-generation",
+            model="gpt2"
         )
 
         prompt = f"Translate English to German: {text}"
 
         result = translator(
             prompt,
-            max_length=100
+            max_length=100,
+            num_return_sequences=1
         )
 
         translated_text = result[0]["generated_text"]
