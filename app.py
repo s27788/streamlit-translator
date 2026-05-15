@@ -53,19 +53,13 @@ if translate_button and text:
     with st.spinner("⏳ Trwa tłumaczenie..."):
 
         translator = pipeline(
-            "text-generation",
-            model="gpt2"
+            "translation_en_to_de",
+            model="Helsinki-NLP/opus-mt-en-de"
         )
 
-        prompt = f"Translate English to German: {text}"
+        result = translator(text)
 
-        result = translator(
-            prompt,
-            max_length=100,
-            num_return_sequences=1
-        )
-
-        translated_text = result[0]["generated_text"]
+        translated_text = result[0]["translation_text"]
 
         st.success("✅ Tłumaczenie zakończone pomyślnie!")
 
@@ -87,7 +81,7 @@ Technologie użyte w projekcie:
 - Streamlit
 - Hugging Face
 - Transformers
-- FLAN-T5
+- MarianMT
 """)
 
 st.sidebar.success("Projekt laboratoryjny AI")
@@ -95,5 +89,4 @@ st.sidebar.success("Projekt laboratoryjny AI")
 # Footer
 st.write("---")
 
-st.caption("👩‍💻 Autor: Lidia Kongiel")
 st.caption("🎓 Numer indeksu: s27788")
