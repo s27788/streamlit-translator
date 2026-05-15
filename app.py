@@ -1,92 +1,49 @@
 import streamlit as st
-from transformers import pipeline
+from deep_translator import GoogleTranslator
 
-# Page configuration
+# Page config
 st.set_page_config(
-    page_title="AI Translator",
+    page_title="English to German Translator",
     page_icon="🌍",
     layout="centered"
 )
 
-# Header
-st.title("🌍 AI Translator")
-
-st.write(
-    "Aplikacja tłumaczy tekst z języka angielskiego na niemiecki przy użyciu modeli AI z Hugging Face."
-)
-
-# Graphics
+# Title
 st.markdown(
     """
-    <div style="text-align: center; font-size: 80px;">
-        🇬🇧 ➜ 🇩🇪
-    </div>
-
-    <p style="text-align: center; font-size: 28px; font-weight: bold;">
-        English to German AI Translator
-    </p>
-    """,
-    unsafe_allow_html=True
+    # 🇬🇧 English ➜ 🇩🇪 German
+    ### AI Translator App
+    """
 )
 
-# Instruction
-st.info("""
-📌 Instrukcja:
-1. Wpisz tekst po angielsku
-2. Kliknij przycisk "Translate"
-3. Poczekaj chwilę na tłumaczenie
-4. Odczytaj wynik
-""")
+st.write(
+    "Translate English text into German using AI translation."
+)
 
-# Text area
+# Input
 text = st.text_area(
-    "✏️ Wpisz tekst po angielsku",
-    placeholder="Example: Hello my friend"
+    "✏️ Enter English text",
+    height=200,
+    placeholder="Type your text here..."
 )
 
-# Translate button
-translate_button = st.button("🌍 Translate")
+# Button
+if st.button("🌍 Translate"):
 
-# Translation logic
-if translate_button and text:
+    if text.strip() == "":
+        st.warning("Please enter some text.")
+    else:
+        try:
+            translated = GoogleTranslator(
+                source="en",
+                target="de"
+            ).translate(text)
 
-    with st.spinner("⏳ Trwa tłumaczenie..."):
+            st.success("✅ Translation completed successfully!")
 
-        translator = pipeline(
-            "translation_en_to_de",
-            model="Helsinki-NLP/opus-mt-en-de"
-        )
+            st.markdown("## 🇩🇪 Translation")
 
-        result = translator(text)
+            st.code(translated)
 
-        translated_text = result[0]["translation_text"]
-
-        st.success("✅ Tłumaczenie zakończone pomyślnie!")
-
-        st.markdown("## 🇩🇪 Tłumaczenie")
-
-        st.code(translated_text, language=None)
-
-# Empty text validation
-elif translate_button and not text:
-
-    st.warning("⚠️ Wpisz tekst do tłumaczenia.")
-
-# Sidebar
-st.sidebar.title("📚 Menu")
-
-st.sidebar.info("""
-Technologie użyte w projekcie:
-- Python
-- Streamlit
-- Hugging Face
-- Transformers
-- MarianMT
-""")
-
-st.sidebar.success("Projekt laboratoryjny AI")
-
-# Footer
-st.write("---")
-
-st.caption("🎓 Numer indeksu: s27788")
+        except Exception as e:
+            st.error(f"Error: {e}")
