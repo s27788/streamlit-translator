@@ -1,6 +1,8 @@
+```python
 import streamlit as st
 from transformers import pipeline
 
+# Page configuration
 st.set_page_config(
     page_title="AI Translator",
     page_icon="🌍",
@@ -14,6 +16,7 @@ st.write(
     "Aplikacja tłumaczy tekst z języka angielskiego na niemiecki przy użyciu modeli AI z Hugging Face."
 )
 
+# Graphics
 st.markdown(
     """
     <div style="text-align: center; font-size: 80px;">
@@ -31,28 +34,38 @@ st.markdown(
 st.info("""
 📌 Instrukcja:
 1. Wpisz tekst po angielsku
-2. Poczekaj chwilę na przetworzenie
-3. Odczytaj tłumaczenie po niemiecku
+2. Kliknij przycisk "Translate"
+3. Poczekaj chwilę na tłumaczenie
+4. Odczytaj wynik
 """)
 
-# Text input
+# Text area
 text = st.text_area(
     "✏️ Wpisz tekst po angielsku",
     placeholder="Example: Hello my friend"
 )
 
-# Translation
-if text:
+# Translate button
+translate_button = st.button("🌍 Translate")
+
+# Translation logic
+if translate_button and text:
 
     with st.spinner("⏳ Trwa tłumaczenie..."):
+
         translator = pipeline(
-            task="translation",
-            model="Helsinki-NLP/opus-mt-en-de"
+            "text2text-generation",
+            model="google/flan-t5-base"
         )
 
-        result = translator(text)
+        prompt = f"Translate English to German: {text}"
 
-        translated_text = result[0]["translation_text"]
+        result = translator(
+            prompt,
+            max_length=100
+        )
+
+        translated_text = result[0]["generated_text"]
 
         st.success("✅ Tłumaczenie zakończone pomyślnie!")
 
@@ -60,20 +73,28 @@ if text:
 
         st.code(translated_text, language=None)
 
+# Empty text validation
+elif translate_button and not text:
+
+    st.warning("⚠️ Wpisz tekst do tłumaczenia.")
+
 # Sidebar
 st.sidebar.title("📚 Menu")
 
 st.sidebar.info("""
-Aplikacja wykorzystuje:
+Technologie użyte w projekcie:
+- Python
 - Streamlit
 - Hugging Face
 - Transformers
-- MarianMT Model
+- FLAN-T5
 """)
 
-st.sidebar.success("Projekt laboratoryjny - Python + AI")
+st.sidebar.success("Projekt laboratoryjny AI")
 
 # Footer
 st.write("---")
 
+st.caption("👩‍💻 Autor: Lidia Kongiel")
 st.caption("🎓 Numer indeksu: s27788")
+```
