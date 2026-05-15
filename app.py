@@ -45,9 +45,8 @@ text = st.text_area(
 if text:
 
     with st.spinner("⏳ Trwa tłumaczenie..."):
-
         translator = pipeline(
-            "translation_en_to_de",
+            task="translation",
             model="Helsinki-NLP/opus-mt-en-de"
         )
 
